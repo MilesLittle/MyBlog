@@ -1,0 +1,36 @@
+<!-- app/views/users/show_other.html.erb -->
+<h1><%= @other_user.username %>'s Profile</h1>
+<p>Username: <%= @other_user.username %></p>
+
+<h2>Comments</h2>
+<% @comments.group_by(&:post).each do |post, post_comments| %>
+  <div class="post-comments">
+    <h3><%= link_to post.title, post_path(post) %></h3>
+    
+    <% post_comments.each do |comment| %>
+      <div class="comment">
+        <p>
+          <strong>
+            <%= link_to_commenter(comment) %>
+          :</strong> 
+          <%= comment.body %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<h2>Posts</h2>
+<% @posts.each do |post| %>
+  <div class="post">
+    <h3><%= link_to post.title, post_path(post) %></h3>
+    <p><%= post.content %></p>
+    <!-- Add other post details as needed -->
+    <% if current_user && current_user.admin? %>
+      <div class="btn-group" role="group">
+        <%= link_to 'Edit', edit_post_path(post), class: 'btn btn-primary' %>
+        <%= link_to 'Delete', post_path(post), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
